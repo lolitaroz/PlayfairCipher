@@ -28,19 +28,7 @@ public class CipherKey{
     return rowCol;
   }
 
-  public static String doubleLetter(String text){
-    for (int i = 0; i < text.length() - 1; i += 2){
-      if (text.substring(i, i+1).equals(text.substring(i+1, i+2)))
-        text = text.substring(0, i+1) + "X" + text.substring(i+1);
-    }
-    return text;
-  }
-
-  public static void main(String[] args) {
-    String cipher = args[0].toUpperCase();
-    String keyString = args[1].toUpperCase();
-    cipher = doubleLetter(cipher);
-    if (cipher.length() % 2 != 0) cipher += "Z";
+  public static String[][] makeDoubleArray(String keyString){
     String[][] key = new String[5][5];
     int index = 0;
     for (int i = 0; i < 5; i++){
@@ -49,7 +37,35 @@ public class CipherKey{
         index++;
       }
     }
-    int[] a = findRowCol(key, "A");
+    return key;
+  }
 
+  public static String doubleLetter(String text){
+    for (int i = 0; i < text.length() - 1; i += 2){
+      if (text.substring(i, i+1).equals(text.substring(i+1, i+2)))
+        text = text.substring(0, i+1) + "X" + text.substring(i+1);
+    }
+    return text;
+  }
+
+  public static String encode(String plaintext){
+    String ciphertext = doubleLetter(plaintext);
+    if (ciphertext.length() % 2 != 0) ciphertext += "Z";
+    return ciphertext;
+  }
+
+  public static String decode(String ciphertext){
+    String plaintext = "";
+    return plaintext;
+  }
+
+
+  public static void main(String[] args) {
+    String encode = args[0];
+    String text = args[1].toUpperCase();
+    String keyString = args[2].toUpperCase();
+    String[][] key = makeDoubleArray(keyString);
+    if (encode.equals("encode")) encode(text);
+    else decode(text);
   }
 }
