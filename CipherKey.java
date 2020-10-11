@@ -15,10 +15,32 @@ Be aware that encoding and decoding have opposite shifts for same column/row let
 
 public class CipherKey{
 
+  public static int[] findRowCol(String[][] key, String letter){
+    int[] rowCol = {0, 0};
+    for (int i = 0; i < 5; i++){
+      for (int j = 0; j < 5; j++){
+        if (key[i][j].equals(letter)){
+          rowCol[0] = i;
+          rowCol[1] = j;
+        }
+      }
+    }
+    return rowCol;
+  }
+
+  public static String doubleLetter(String text){
+    for (int i = 0; i < text.length() - 1; i += 2){
+      if (text.substring(i, i+1).equals(text.substring(i+1, i+2)))
+        text = text.substring(0, i+1) + "X" + text.substring(i+1);
+    }
+    return text;
+  }
+
   public static void main(String[] args) {
-    String cipher = args[0];
-    String keyString = args[1];
-    if (keyString.length() % 2 != 0) keyString += "Z";
+    String cipher = args[0].toUpperCase();
+    String keyString = args[1].toUpperCase();
+    cipher = doubleLetter(cipher);
+    if (cipher.length() % 2 != 0) cipher += "Z";
     String[][] key = new String[5][5];
     int index = 0;
     for (int i = 0; i < 5; i++){
@@ -27,6 +49,7 @@ public class CipherKey{
         index++;
       }
     }
+    int[] a = findRowCol(key, "A");
 
   }
 }
