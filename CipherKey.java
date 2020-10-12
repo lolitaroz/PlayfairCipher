@@ -66,7 +66,7 @@ public class CipherKey{
     int c = rc1[1] + direction;
     if (c > 4) c = 0;
     if (c < 0) c = 4;
-    String newPair = key[rc1[0]][c] + key[rc1[0]][c];
+    String newPair = key[rc1[0]][c] + key[rc2[0]][c];
     return newPair;
   }
 
@@ -77,27 +77,50 @@ public class CipherKey{
     return newPair;
   }
 
-  public static String encode(String plaintext){
-    String ciphertext = doubleLetter(plaintext);
-    if (ciphertext.length() % 2 != 0) ciphertext += "Z";
-    for (int i = 0; i < ciphertext.length(); i += 2){
-
+  public static String encode(String plaintext, String [][] key){
+    String text = doubleLetter(plaintext);
+    String ciphertext = "";
+    if (text.length() % 2 != 0) text += "Z";
+    for (int i = 0; i < text.length() - 1; i += 2){
+      String l1, l2 = "";
+      l1 = text.substring(i, i+1);
+      if (i+1 < text.length() - 1) l2 = text.substring(i+1, i+2);
+      else l2 = text.substring(i+1);
+      int[] rc1 = findRowCol(key, l1);
+      int[] rc2 = findRowCol(key, l2);
+      String pair = l1 + l2;
+      if (rc1[0] == rc2[0]) pair = vertical(pair, key, 1);
+      else if (rc1[1] == rc2[1]) pair = horizontal(pair, key, 1);
+      else pair = regular(pair, key);
+      ciphertext += pair;
     }
     return ciphertext;
   }
 
-  public static String decode(String ciphertext){
+  public static String decode(String text, String [][] key){
     String plaintext = "";
+    for (int i = 0; i < text.length() - 1; i += 2){
+      String l1, l2 = "";
+      l1 = text.substring(i, i+1);
+      if (i+1 < text.length() - 1) l2 = text.substring(i+1, i+2);
+      else l2 = text.substring(i+1);
+      int[] rc1 = findRowCol(key, l1);
+      int[] rc2 = findRowCol(key, l2);
+      String pair = l1 + l2;
+      if (rc1[0] == rc2[0]) pair = vertical(pair, key, -1);
+      else if (rc1[1] == rc2[1]) pair = horizontal(pair, key, -1);
+      else pair = regular(pair, key);
+      plaintext += pair;
+    }
     return plaintext;
   }
-
 
   public static void main(String[] args) {
     String encode = args[0];
     String text = args[1].toUpperCase();
     String keyString = args[2].toUpperCase();
     String[][] key = makeDoubleArray(keyString);
-    if (encode.equals("encode")) System.out.println(encode(text));
-    else decode(text);
+    if (encode.equals("encode")) System.out.println(encode(text, key));
+    else System.out.println(decode(text, key));
   }
 }
