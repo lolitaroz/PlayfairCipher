@@ -71,8 +71,10 @@ public class CipherKey{
   }
 
   public static String regular(String letterPair, String[][] key){
-
-    return "";
+    int[] rc1 = findRowCol(key, letterPair.substring(0, 1));
+    int[] rc2 = findRowCol(key, letterPair.substring(1));
+    String newPair = key[rc1[0]][rc2[1]] + key[rc2[0]][rc1[1]];
+    return newPair;
   }
 
   public static String encode(String plaintext){
