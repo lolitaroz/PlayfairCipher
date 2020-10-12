@@ -48,6 +48,15 @@ public class CipherKey{
     return text;
   }
 
+  public static String noJ(String text){
+    String x = "";
+    for (int i = 0; i < text.length(); i++){
+      if (text.substring(i, i+1).equals("J")) x += "I";
+      else x += text.substring(i, i+1);
+    }
+    return x;
+  }
+
   public static String vertical(String letterPair, String[][] key, int direction){
     // direction is 1 if encode, -1 if decode
     int[] rc1 = findRowCol(key, letterPair.substring(0, 1));
@@ -78,14 +87,14 @@ public class CipherKey{
   }
 
   public static String encode(String plaintext, String [][] key){
-    String text = doubleLetter(plaintext);
+    String text = noJ(plaintext);
+    text = doubleLetter(text);
     String ciphertext = "";
     if (text.length() % 2 != 0) text += "Z";
     for (int i = 0; i < text.length() - 1; i += 2){
       String l1, l2 = "";
       l1 = text.substring(i, i+1);
-      if (i+1 < text.length() - 1) l2 = text.substring(i+1, i+2);
-      else l2 = text.substring(i+1);
+      l2 = text.substring(i+1, i+2);
       int[] rc1 = findRowCol(key, l1);
       int[] rc2 = findRowCol(key, l2);
       String pair = l1 + l2;
